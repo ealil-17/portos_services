@@ -8,11 +8,19 @@ import(
 )
 func main(){
 
+	//getting input from the front-end
     var i string;
-
 	fmt.Printf("Enter the command to exe ");
 	fmt.Scan(&i);
-	//fmt.Printf("the string is %v",i)
+	
+	//calling the defined-function
+	exe(i);
+}
+
+//  func that execute the terminal commands
+
+func exe(var i string){
+
 
 	args := strings.Split(i," ");
 
@@ -20,8 +28,15 @@ func main(){
 
 	out , err := cmd.CombinedOutput();
 
+ // checking for errors
+ 
 	if err!=nil{
 	   log.Printf("%v",err);
     }
+
+// Displaying the logs
+
     log.Printf("\n%s" ,out);
+
+
 }
