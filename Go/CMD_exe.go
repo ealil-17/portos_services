@@ -1,42 +1,47 @@
 package main
 
-import(
+import (
+	"bufio"
 	"fmt"
-	"log"
-	"strings"
+	"os"
 	"os/exec"
+	"strings"
 )
-func main(){
 
-	//getting input from the front-end
-    var i string;
-	fmt.Printf("Enter the command to exe ");
-	fmt.Scan(&i);
-	
-	//calling the defined-function
-	exe(i);
-}
+func main() {
+	// Prompt the user for a command
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter the command: ")
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Printf("Error reading input: %v\n", err)
+		return
+	}
 
-//  func that execute the terminal commands
+	// Parse the command and arguments
+	input = strings.TrimSpace(input)
+	parts := strings.Split(input, " ")
+	if len(parts) == 0 {
+		fmt.Println("No command provided")
+		return
+	}
 
-func exe(var i string){
+	command := parts[0]
+	args := parts[1:]
 
+	// Create a command instance
+	cmd := exec.Command(command, args...)
 
-	args := strings.Split(i," ");
+	// Set up the command to print logs in real time
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
-	cmd := exec.Command(args[0],args[1:]...);
+	// Execute the command
+	err = cmd.Run()
+	if err != nil {
+		fmt.Printf("Error executing command: %v\n", err)
+		return
+	}
 
-	out , err := cmd.CombinedOutput();
-
- // checking for errors
- 
-	if err!=nil{
-	   log.Printf("%v",err);
-    }
-
-// Displaying the logs
-
-    log.Printf("\n%s" ,out);
-
-
+	fmt.Println("Command executed successfully")
 }
